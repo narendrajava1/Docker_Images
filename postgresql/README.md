@@ -522,3 +522,56 @@ private EmployeeData employeeData;
 - Use **Jackson** library to deserialize and serialize JSON data.
 
 This approach allows you to leverage PostgreSQL’s powerful JSON support while maintaining clean, easy-to-manage Spring Boot code. Let me know if you need more examples or further clarification!
+
+
+```select
+	version();
+
+select
+	datname as database_name
+from
+	pg_database;
+
+select
+	tablename,
+	*
+from
+	pg_tables
+where
+	schemaname = 'public'
+;
+
+select * from employees;
+create view employee_department as
+select
+	e.name as employee_name,
+	e.department_id,
+	e.email,
+	e.employee_id,
+	e.hire_date,
+	d.name as department_name
+from
+	employees e
+inner join departments d on
+	e.department_id = d.department_id;
+
+explain analyze select * from employee_department where employee_id=1 ;
+
+-- Disable sequential scan
+SET enable_seqscan TO off;
+
+-- Run the query with EXPLAIN ANALYZE
+EXPLAIN ANALYZE 
+SELECT * FROM employees WHERE employee_id = 1;
+
+-- Re-enable sequential scan
+SET enable_seqscan TO on;
+
+
+
+create index concurrently idx_employee_id on employees(employee_id);
+create index concurrently idx_employee_id on employees(employee_id);
+
+create index concurrently idx_employee_department on employees(employee_id,department_id);
+
+create index concurrently idx_department_department_id on departments(department_id);```
